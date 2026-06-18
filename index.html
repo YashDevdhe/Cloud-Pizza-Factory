@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pizza Pro UI</title>
+    <style>
+        body { font-family: Arial; background:#111; color:white; text-align:center; }
+        .card { background:#222; padding:20px; margin:10px auto; width:60%; border-radius:10px; }
+        button { padding:10px; margin:5px; cursor:pointer; }
+    </style>
+</head>
+
+<body>
+
+<h1>🍕 CLOUD PIZZA PRO</h1>
+
+<div class="card">
+    <h2>Menu</h2>
+    <button onclick="loadMenu()">Load Menu</button>
+    <div id="menu"></div>
+</div>
+
+<div class="card">
+    <h2>Orders</h2>
+    <button onclick="loadOrders()">Load Orders</button>
+    <div id="orders"></div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+
+function loadMenu(){
+    fetch(API + "/menu")
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+        data.forEach(i => {
+            html += `<p>${i.name} - ₹${i.price}
+            <button onclick="order(${i.id})">Order</button></p>`;
+        });
+        document.getElementById("menu").innerHTML = html;
+    });
+}
+
+function order(id){
+    fetch(API + "/order/" + id)
+    .then(res => res.json())
+    .then(data => alert(data.status));
+}
+
+function loadOrders(){
+    fetch(API + "/orders")
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+        data.forEach(o => {
+            html += `<p>${o.name} - ₹${o.price}</p>`;
+        });
+        document.getElementById("orders").innerHTML = html;
+    });
+}
+</script>
+
+</body>
+</html>
